@@ -1,0 +1,21 @@
+.conversion-button {
+  background-color: var(--button-bg);
+  margin-bottom: 0.5rem;
+}
+
+.conversion-button:hover {
+  background-color: var(--button-hover);
+  transform: scale(1.02);
+}
+
+.back-button {
+  background-color: #4a5568;
+  margin-top: 1rem;
+}
+
+label {
+  background-color: white!important;
+}
+.result-container h3{
+    color: black !important;
+}

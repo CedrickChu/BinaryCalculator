@@ -1,0 +1,68 @@
+.operation-button {
+  background-color: var(--button-bg);
+  margin-bottom: 0.5rem;
+}
+
+.operation-button:hover {
+  background-color: var(--button-hover);
+  transform: scale(1.02);
+}
+
+.back-button {
+  background-color: #4a5568;
+  margin-top: 1rem;
+}
+
+.back-button:hover {
+  background-color: #2d3748;
+}
+
+.operation-input-container {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.binary-input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--button-bg);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+}
+
+.result-container {
+  margin-top: 1rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color:white;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.result-row label {
+  font-weight: bold;
+  color: var(--title-color);
+}
+label {
+    color: white;
+  }
