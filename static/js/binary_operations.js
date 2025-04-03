@@ -193,24 +193,32 @@ document.addEventListener('DOMContentLoaded', function () {
     performSubtractionButton.addEventListener('click', function () {
         const minuend = binaryInputMinuend.value.trim();
         const subtrahend = binaryInputSubtrahend.value.trim();
-
+    
         if (!isValidSignedBinaryInput(minuend) || !isValidSignedBinaryInput(subtrahend)) {
             alert('Invalid signed binary input. First bit indicates sign (0 for positive, 1 for negative).');
             return;
         }
-
+    
+        // Convert signed binary to decimal
         const decimal1 = signedBinaryToDecimal(minuend);
         const decimal2 = signedBinaryToDecimal(subtrahend);
+    
+        // Perform subtraction in decimal
         const resultDecimal = decimal1 - decimal2;
+    
+        // Display decimal operation
         document.getElementById('subtraction-operation').textContent = `${decimal1} - ${decimal2} = ${resultDecimal}`;
-
-        // Ensure result is always in 2's complement signed binary
-        const signedBinaryResult = decimalToSignedBinary(resultDecimal);
+    
+        // Convert result back to signed 16-bit binary
+        const signedBinaryResult = decimalToSignedBinary(resultDecimal, 16);
         binarySubtractionResult.textContent = signedBinaryResult;
-        octalSubtractionResult.textContent = decimalToOctal(Math.abs(resultDecimal));
+    
+        // Convert and display in other bases
+        octalSubtractionResult.textContent = decimalToOctal(resultDecimal); 
         decimalSubtractionResult.textContent = resultDecimal.toString();
-        hexSubtractionResult.textContent = decimalToHex(Math.abs(resultDecimal));
+        hexSubtractionResult.textContent = decimalToHex(resultDecimal);
     });
+    
 
     // Existing helper functions
     function isValidBinaryInput(input) {
@@ -419,6 +427,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const result = binaryFrac ? `${binaryInt}.${binaryFrac}` : binaryInt;
         return isNegative ? `-${result}` : result;
     }
+    function performSubtraction(input1, input2) {
+        const decimal1 = binaryToDecimal(input1);
+        const decimal2 = binaryToDecimal(input2);
+    
+        const resultDecimal = decimal1 - decimal2;
+    
+        return decimalToBinary(resultDecimal, 16); 
+    }
+
     function convertToNibbleFormat(binaryStr) {
         // Remove any existing decimal point
         const [intPart, fracPart] = binaryStr.split('.');
