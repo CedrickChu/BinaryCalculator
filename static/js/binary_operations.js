@@ -105,8 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Existing addition functionality (signed)
     performAdditionButton.addEventListener('click', function () {
-        const input1 = binaryInput1.value.trim();
-        const input2 = binaryInput2.value.trim();
+        const input1 = convertToNibbleFormatInput(binaryInput1.value.trim());
+        const input2 = convertToNibbleFormatInput(binaryInput2.value.trim());
 
         if (!isValidSignedBinaryInput(input1) || !isValidSignedBinaryInput(input2)) {
             alert('Invalid signed binary input. The first bit indicates sign (0 for positive, 1 for negative).');
@@ -118,18 +118,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const resultDecimal = decimal1 + decimal2;
         document.getElementById('addition-operation').textContent = `${decimal1} + ${decimal2} = ${resultDecimal}`;
 
-        // Ensure result is always in 2's complement signed binary
         const signedBinaryResult = decimalToSignedBinary(resultDecimal);
-        binaryResult.textContent = signedBinaryResult;
-        octalResult.textContent = decimalToOctal(Math.abs(resultDecimal));
+        binaryResult.textContent = convertToNibbleFormat(signedBinaryResult);
+        octalResult.textContent = decimalToOctal(resultDecimal);
         decimalResult.textContent = resultDecimal.toString();
-        hexResult.textContent = decimalToHex(Math.abs(resultDecimal));
+        hexResult.textContent = decimalToHex(resultDecimal);
     });
 
     // Division functionality (signed)
     performDivisionButton.addEventListener('click', function () {
-        const dividend = binaryInputDividend.value.trim();
-        const divisor = binaryInputDivisor.value.trim();
+        const dividend = convertToNibbleFormatInput(binaryInputDividend.value.trim());
+        const divisor = convertToNibbleFormatInput(binaryInputDivisor.value.trim());
 
         if (!isValidSignedBinaryInput(dividend) || !isValidSignedBinaryInput(divisor)) {
             alert('Invalid signed binary input. The first bit indicates sign (0 for positive, 1 for negative).');
@@ -142,9 +141,11 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Division by zero is not allowed.');
             return;
         }
-
         const result = performBinaryDivision(dividend, divisor);
-        document.getElementById('division-operation').textContent = `${dividendDecimal} ÷ ${divisorDecimal} = ${result.decimal}`;
+
+        document.getElementById('division-operation').textContent =
+            `${dividendDecimal} ÷ ${divisorDecimal} = ${result.decimal}`;
+
         binaryDivisionResult.textContent = result.binary;
         octalDivisionResult.textContent = result.octal;
         decimalDivisionResult.textContent = result.decimal;
@@ -153,17 +154,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Multiplication functionality (signed)
     performMultiplicationButton.addEventListener('click', function () {
-        const multiplicand = binaryInputMultiplicand.value.trim();
-        const multiplier = binaryInputMultiplier.value.trim();
-
+        const multiplicand = convertToNibbleFormatInput(binaryInputMultiplicand.value.trim());
+        const multiplier = convertToNibbleFormatInput(binaryInputMultiplier.value.trim());
+    
         if (!isValidSignedBinaryInput(multiplicand) || !isValidSignedBinaryInput(multiplier)) {
             alert('Invalid signed binary input. The first bit indicates sign (0 for positive, 1 for negative).');
             return;
         }
-
+    
         const multiplicandDecimal = signedBinaryToDecimal(multiplicand);
         const multiplierDecimal = signedBinaryToDecimal(multiplier);
+        
         const result = performBinaryMultiplication(multiplicand, multiplier);
+    
         document.getElementById('multiplication-operation').textContent = `${multiplicandDecimal} × ${multiplierDecimal} = ${result.decimal}`;
         binaryMultiplicationResult.textContent = result.binary;
         octalMultiplicationResult.textContent = result.octal;
@@ -191,8 +194,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Subtraction functionality
     performSubtractionButton.addEventListener('click', function () {
-        const minuend = binaryInputMinuend.value.trim();
-        const subtrahend = binaryInputSubtrahend.value.trim();
+        const minuend = convertToNibbleFormatInput(binaryInputMinuend.value.trim());
+        const subtrahend = convertToNibbleFormatInput(binaryInputSubtrahend.value.trim());
     
         if (!isValidSignedBinaryInput(minuend) || !isValidSignedBinaryInput(subtrahend)) {
             alert('Invalid signed binary input. First bit indicates sign (0 for positive, 1 for negative).');
@@ -210,15 +213,15 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('subtraction-operation').textContent = `${decimal1} - ${decimal2} = ${resultDecimal}`;
     
         // Convert result back to signed 16-bit binary
-        const signedBinaryResult = decimalToSignedBinary(resultDecimal, 16);
-        binarySubtractionResult.textContent = signedBinaryResult;
+        const signedBinaryResult = decimalToSignedBinary(resultDecimal, 16, 8);
+        binarySubtractionResult.textContent = convertToNibbleFormat(signedBinaryResult);
     
-        // Convert and display in other bases
-        octalSubtractionResult.textContent = decimalToOctal(resultDecimal); 
-        decimalSubtractionResult.textContent = resultDecimal.toString();
-        hexSubtractionResult.textContent = decimalToHex(resultDecimal);
+        // Convert and display in other bases (ensure negative values are passed as is)
+        octalSubtractionResult.textContent = decimalToOctal(resultDecimal);  
+        decimalSubtractionResult.textContent = resultDecimal.toString();     
+        hexSubtractionResult.textContent = decimalToHex(resultDecimal);       
     });
-    
+
 
     // Existing helper functions
     function isValidBinaryInput(input) {
@@ -230,37 +233,65 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function signedBinaryToDecimal(binary) {
-        const isNegative = binary[0] === '1';
-        const absInput = isNegative ? twosComplement(binary) : binary;
-        const decimalValue = binaryToDecimal(absInput);
+        // Split into integer and fractional parts
+        const [intPart, fracPart = ""] = binary.split(".");
+
+        const isNegative = intPart[0] === '1';
+
+        // Combine binary as a whole number string (remove dot for processing)
+        const combined = intPart + fracPart;
+        const totalBits = combined.length;
+
+        let absBinary = combined;
+
+        if (isNegative) {
+            // Convert to positive using two's complement
+            absBinary = twosComplement(combined);
+        }
+
+        // Convert absolute binary to decimal
+        let decimalValue = 0;
+
+        for (let i = 0; i < absBinary.length; i++) {
+            if (absBinary[i] === '1') {
+                decimalValue += Math.pow(2, totalBits - i - 1);
+            }
+        }
+
+        decimalValue /= Math.pow(2, fracPart.length);
+
         return isNegative ? -decimalValue : decimalValue;
     }
-    
-    function decimalToSignedBinary(decimal, bitLength) {
+
+    function decimalToSignedBinary(decimal, totalBits = 12, fracBits = 4) {
         const isNegative = decimal < 0;
-        let binaryResult = Math.abs(decimal).toString(2);
+        const absDecimal = Math.abs(decimal);
 
-        binaryResult = binaryResult.padStart(bitLength, '0');
+        const fixedPointValue = Math.round(absDecimal * Math.pow(2, fracBits));
+        let binary = fixedPointValue.toString(2).padStart(totalBits, '0');
 
-        return isNegative ? twosComplement(binaryResult) : binaryResult;
+        if (isNegative) {
+            binary = twosComplement(binary);
+        }
+
+        // Insert binary point at the correct position
+        const intPart = binary.slice(0, totalBits - fracBits);
+        const fracPart = binary.slice(totalBits - fracBits);
+
+        return intPart + '.' + fracPart;
     }
 
     function twosComplement(binaryStr) {
-        const paddedBinaryStr = binaryStr.padStart(binaryStr.length, '0');
-
-        const invertedBits = paddedBinaryStr.split('').map(bit => bit === '0' ? '1' : '0').join('');
+        const inverted = binaryStr.split('').map(bit => bit === '0' ? '1' : '0').join('');
 
         let result = '';
         let carry = 1;
-        for (let i = invertedBits.length - 1; i >= 0; i--) {
-            const sum = parseInt(invertedBits[i]) + carry;
+
+        for (let i = inverted.length - 1; i >= 0; i--) {
+            const bit = parseInt(inverted[i]);
+            const sum = bit + carry;
             result = (sum % 2) + result;
             carry = Math.floor(sum / 2);
-        }
-
-        // Ensure the result has the same length as the input
-        while (result.length < paddedBinaryStr.length) {
-            result = '0' + result;
         }
 
         return result;
@@ -335,41 +366,36 @@ document.addEventListener('DOMContentLoaded', function () {
     function performBinaryDivision(dividend, divisor) {
         const dividendDecimal = signedBinaryToDecimal(dividend);
         const divisorDecimal = signedBinaryToDecimal(divisor);
-    
+
         const resultDecimal = dividendDecimal / divisorDecimal;
-    
-        // Determine the bit length to ensure we handle negative values properly
-        const bitLength = Math.max(dividend.length, divisor.length, 8);  // You can set this to 8 or 16 depending on your requirement
-    
-        let resultBinary = decimalToSignedBinary(Math.abs(resultDecimal), bitLength);
-    
-        // If the result is negative, convert the binary to two's complement
-        if (resultDecimal < 0) {
-            resultBinary = twosComplement(resultBinary);
-        }
-    
+
+        const totalBits = 16;
+        const fracBits = 8;
+
+        const resultBinary = decimalToSignedBinary(resultDecimal, totalBits, fracBits);
+
         return {
             binary: convertToNibbleFormat(resultBinary),
-            octal: decimalToOctal(Math.abs(resultDecimal)),
+            octal: decimalToOctal(resultDecimal),
             decimal: resultDecimal.toString(),
-            hex: decimalToHex(Math.abs(resultDecimal))
+            hex: decimalToHex(resultDecimal)
         };
     }
     // Binary Multiplication (signed)
     function performBinaryMultiplication(multiplicand, multiplier) {
         const multiplicandDecimal = signedBinaryToDecimal(multiplicand);
         const multiplierDecimal = signedBinaryToDecimal(multiplier);
-
+    
         const resultDecimal = multiplicandDecimal * multiplierDecimal;
-
-        // Convert result to binary
-        const resultBinary = decimalToSignedBinary(resultDecimal);
-
+    
+        // Customize bitLength and fractional bits
+        const resultBinary = decimalToSignedBinary(resultDecimal, 16, 8);
+    
         return {
             binary: convertToNibbleFormat(resultBinary),
-            octal: decimalToOctal(Math.abs(resultDecimal)),
+            octal: decimalToOctal(resultDecimal),
             decimal: resultDecimal.toString(),
-            hex: decimalToHex(Math.abs(resultDecimal))
+            hex: decimalToHex(resultDecimal)
         };
     }
 
@@ -427,41 +453,60 @@ document.addEventListener('DOMContentLoaded', function () {
         const result = binaryFrac ? `${binaryInt}.${binaryFrac}` : binaryInt;
         return isNegative ? `-${result}` : result;
     }
-    function performSubtraction(input1, input2) {
-        const decimal1 = binaryToDecimal(input1);
-        const decimal2 = binaryToDecimal(input2);
-    
-        const resultDecimal = decimal1 - decimal2;
-    
-        return decimalToBinary(resultDecimal, 16); 
+    function convertToNibbleFormatInput(binaryStr) {
+        // Remove any existing decimal point
+        const [intPart, fracPart] = binaryStr.split('.');
+
+        // Ensure integer part is padded from the left
+        const paddedIntPart = intPart.padStart(Math.ceil(intPart.length / 4) * 4, '0');
+
+        // Split integer part into proper 4-bit nibbles
+        const intNibbles = [];
+        for (let i = 0; i < paddedIntPart.length; i += 4) {
+            intNibbles.push(paddedIntPart.slice(i, i + 4));
+        }
+
+        // Split fractional part into nibbles
+        const fracNibbles = [];
+        if (fracPart) {
+            for (let i = 0; i < fracPart.length; i += 4) {
+                fracNibbles.push(fracPart.slice(i, i + 4).padEnd(4, '0'));
+            }
+        }
+
+        // Combine nibbles with space separator
+        const formattedInt = intNibbles.join('');
+        const formattedFrac = fracNibbles.length > 0 ? '.' + fracNibbles.join('') : '';
+
+        return formattedInt + formattedFrac;
     }
 
     function convertToNibbleFormat(binaryStr) {
         // Remove any existing decimal point
         const [intPart, fracPart] = binaryStr.split('.');
-      
+
         // Ensure integer part is padded from the left
         const paddedIntPart = intPart.padStart(Math.ceil(intPart.length / 4) * 4, '0');
-      
+
         // Split integer part into proper 4-bit nibbles
         const intNibbles = [];
         for (let i = 0; i < paddedIntPart.length; i += 4) {
-          intNibbles.push(paddedIntPart.slice(i, i + 4));
+            intNibbles.push(paddedIntPart.slice(i, i + 4));
         }
-      
+
         // Split fractional part into nibbles
         const fracNibbles = [];
         if (fracPart) {
-          for (let i = 0; i < fracPart.length; i += 4) {
-            fracNibbles.push(fracPart.slice(i, i + 4).padEnd(4, '0'));
-          }
+            for (let i = 0; i < fracPart.length; i += 4) {
+                fracNibbles.push(fracPart.slice(i, i + 4).padEnd(4, '0'));
+            }
         }
-      
+
         // Combine nibbles with space separator
         const formattedInt = intNibbles.join(' ');
         const formattedFrac = fracNibbles.length > 0 ? ' . ' + fracNibbles.join(' ') : '';
-      
+
         return formattedInt + formattedFrac;
-      }
-      
+    }
+
 });

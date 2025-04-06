@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             alert('Invalid binary input. Only 0s and 1s allowed.');
                             return;
                         }
-                        nibbleInputNumber = convertToNibbleFormatInput(inputNumber) 
+                        nibbleInputNumber = convertToNibbleFormatInput(inputNumber)
                         decimalValue = binaryToDecimal16Bit(nibbleInputNumber);
                         break;
                     case 'decimal':
@@ -223,40 +223,40 @@ document.addEventListener('DOMContentLoaded', function () {
     function decimalToBinary16Bit(decimal) {
         const isNegative = decimal < 0;
         const absDecimal = Math.abs(decimal);
-    
+
         // Convert integer part to binary
         let intPart = Math.floor(absDecimal);
         let fracPart = absDecimal - intPart;
-    
+
         let binaryInt = intPart.toString(2);
-    
+
         // Determine minimum bit length (8-bit or 16-bit)
         let bitLength = binaryInt.length > 7 ? 16 : 8;
         binaryInt = binaryInt.padStart(bitLength - 1, '0'); // Reserve 1 bit for sign
-    
+
         // Convert fractional part
         let binaryFrac = '';
         let tempFrac = fracPart;
         let precision = 8; // 8-bit precision for fractional part
-    
+
         while (precision-- > 0 && tempFrac > 0) {
             tempFrac *= 2;
             let bit = Math.floor(tempFrac);
             binaryFrac += bit;
             tempFrac -= bit;
         }
-    
+
         // Ensure 8-bit fractional part
         binaryFrac = binaryFrac.padEnd(8, '0');
-    
+
         let binaryResult = `${binaryInt}.${binaryFrac}`;
-    
+
         // Handle negative numbers using two’s complement
         if (isNegative) {
             let twosComp = twosComplement(binaryInt);
             binaryResult = `${twosComp}.${binaryFrac}`;
         }
-    
+
         return binaryResult;
     }
 
@@ -297,59 +297,51 @@ document.addEventListener('DOMContentLoaded', function () {
     function convertToNibbleFormat(binaryStr) {
         // Remove any existing decimal point
         const [intPart, fracPart] = binaryStr.split('.');
-      
+
         // Ensure integer part is padded from the left
         const paddedIntPart = intPart.padStart(Math.ceil(intPart.length / 4) * 4, '0');
-      
+
         // Split integer part into proper 4-bit nibbles
         const intNibbles = [];
         for (let i = 0; i < paddedIntPart.length; i += 4) {
-          intNibbles.push(paddedIntPart.slice(i, i + 4));
+            intNibbles.push(paddedIntPart.slice(i, i + 4));
         }
-      
+
         // Split fractional part into nibbles
         const fracNibbles = [];
         if (fracPart) {
-          for (let i = 0; i < fracPart.length; i += 4) {
-            fracNibbles.push(fracPart.slice(i, i + 4).padEnd(4, '0'));
-          }
+            for (let i = 0; i < fracPart.length; i += 4) {
+                fracNibbles.push(fracPart.slice(i, i + 4).padEnd(4, '0'));
+            }
         }
-      
+
         // Combine nibbles with space separator
         const formattedInt = intNibbles.join(' ');
         const formattedFrac = fracNibbles.length > 0 ? ' . ' + fracNibbles.join(' ') : '';
-      
+
         return formattedInt + formattedFrac;
-      }
-      function convertToNibbleFormatInput(binaryStr) {
-        // Remove any existing decimal point
-        const [intPart, fracPart] = binaryStr.split('.');
-      
-        // Ensure integer part is padded from the left
-        const paddedIntPart = intPart.padStart(Math.ceil(intPart.length / 4) * 4, '0');
-      
-        // Split integer part into proper 4-bit nibbles
-        const intNibbles = [];
-        for (let i = 0; i < paddedIntPart.length; i += 4) {
-          intNibbles.push(paddedIntPart.slice(i, i + 4));
+    }
+    // 2's Complement functionality (signed)
+    performComplementButton.addEventListener('click', function () {
+        const binaryNumber = binaryInputComplement.value.trim();
+
+        if (!isValidSignedBinaryInput(binaryNumber)) {
+            alert('Invalid signed binary input. The first bit indicates sign (0 for positive, 1 for negative).');
+            return;
         }
-      
-        // Split fractional part into nibbles
-        const fracNibbles = [];
-        if (fracPart) {
-          for (let i = 0; i < fracPart.length; i += 4) {
-            fracNibbles.push(fracPart.slice(i, i + 4).padEnd(4, '0'));
-          }
-        }
-      
-        // Combine nibbles with space separator
-        const formattedInt = intNibbles.join('');
-        const formattedFrac = fracNibbles.length > 0 ? '.' + fracNibbles.join('') : '';
-      
-        return formattedInt + formattedFrac;
-      }
-      
-      
+
+        const decimalValue = signedBinaryToDecimal(binaryNumber);
+        const result = twosComplement(binaryNumber);
+
+        // Display results
+        document.getElementById('complement-operation').textContent = `2's complement of ${decimalValue} = ${result.decimal}`;
+        binaryComplementResult.textContent = result.binary;
+        octalComplementResult.textContent = result.octal;
+        decimalComplementResult.textContent = result.decimal;
+        hexComplementResult.textContent = result.hex;
+    });
+
+
 
     // Add event listeners to validate input
     document.addEventListener('DOMContentLoaded', function () {

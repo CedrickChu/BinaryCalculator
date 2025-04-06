@@ -5,7 +5,6 @@ from app_init import create_initialized_flask_app
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Create the Flask app using your initialization function.
 app = create_initialized_flask_app()
 
 if __name__ == "__main__":
