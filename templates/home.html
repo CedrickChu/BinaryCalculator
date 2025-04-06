@@ -2,12 +2,17 @@
 {% block content%} 
 <div class="main-content">
     <div class="menu-container">
-    <h1 class="calculator-title">Binary Calculator</h1>
-    <div class="menu-buttons">
-        <a href="/binary-operations" class="menu-button">Binary Operations</a>
-        <a href="/number-conversion" class="menu-button">Number System Conversion</a>
-        <a href="#" class="menu-button exit-button">Exit</a>
-    </div>
+        <div class="tools">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+        </div><br>
+        <h1 class="calculator-title">Binary Calculator</h1>
+        <div class="menu-buttons">
+            <a href="/binary-operations" class="menu-button">Binary Operations</a>
+            <a href="/number-conversion" class="menu-button">Number System Conversion</a>
+            <a href="#" class="menu-button exit-button">Exit</a>
+        </div>
     </div><br><br>
     {% include 'footer.html' %}
 </div>

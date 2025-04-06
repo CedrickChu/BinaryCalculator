@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
 <div class="main-content">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -15,15 +14,21 @@
         </ol>
       </nav>
   <div class="menu-container">
+    <div class="tools">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+    </div><br>
     <h1 class="calculator-title">Number System Conversion</h1>
     <div class="menu-buttons">
       <button class="menu-button conversion-button" data-conversion="binary">Binary to X</button>
       <button class="menu-button conversion-button" data-conversion="decimal">Decimal to X</button>
       <button class="menu-button conversion-button" data-conversion="octal">Octal to X</button>
       <button class="menu-button conversion-button" data-conversion="hexa">Hexa to X</button>
-      <a href="/" class="menu-button back-button">Back to Main Menu</a><br>
+      <a href="/" class="menu-button exit-button">Back to Main Menu</a><br>
     </div>
-  </div>
+  </div><br>
+  {% include 'footer.html' %}
 </div>
 <script src="/static/js/number_conversion.js"></script>
 {%endblock%}

@@ -6,7 +6,7 @@
 :root {
     --bg-color: #1a1a2e;
     --text-color: #ffffff;
-    --button-bg: #0f3460;
+    --button-bg: #21426b;
     --button-hover: #16213e;
     --title-color: #e94560;
 }
@@ -105,3 +105,4 @@ body {
 .exit-button:hover {
     background-color: #c73e54;
 }
+

@@ -103,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Existing addition functionality (signed)
     performAdditionButton.addEventListener('click', function () {
         const input1 = convertToNibbleFormatInput(binaryInput1.value.trim());
         const input2 = convertToNibbleFormatInput(binaryInput2.value.trim());
@@ -216,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const signedBinaryResult = decimalToSignedBinary(resultDecimal, 16, 8);
         binarySubtractionResult.textContent = convertToNibbleFormat(signedBinaryResult);
     
-        // Convert and display in other bases (ensure negative values are passed as is)
+        // Convert and display in other bases
         octalSubtractionResult.textContent = decimalToOctal(resultDecimal);  
         decimalSubtractionResult.textContent = resultDecimal.toString();     
         hexSubtractionResult.textContent = decimalToHex(resultDecimal);       
@@ -274,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function () {
             binary = twosComplement(binary);
         }
 
-        // Insert binary point at the correct position
+        // Insert binary point 
         const intPart = binary.slice(0, totalBits - fracBits);
         const fracPart = binary.slice(totalBits - fracBits);
 
@@ -297,27 +296,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return result;
     }
 
-    // Existing conversion and addition functions (from previous implementation)
-    function binaryToDecimal(binary) {
-        const [intPart, fracPart] = binary.split('.');
-        let decimalValue = 0;
-
-        // Convert integer part
-        for (let i = 0; i < intPart.length; i++) {
-            decimalValue += parseInt(intPart[intPart.length - 1 - i]) * Math.pow(2, i);
-        }
-
-        // Convert fractional part
-        if (fracPart) {
-            for (let i = 0; i < fracPart.length; i++) {
-                decimalValue += parseInt(fracPart[i]) * Math.pow(2, -(i + 1));
-            }
-        }
-
-        return decimalValue;
-    }
-
-    // Existing decimal conversion functions (from previous implementation)
     function decimalToOctal(decimal) {
         const intPart = Math.floor(decimal);
         const fracPart = decimal - intPart;
@@ -328,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Convert fractional part
         if (fracPart > 0) {
             let tempFrac = fracPart;
-            let precision = 6; // Limit fractional precision
+            let precision = 6; 
             while (precision-- > 0 && tempFrac > 0) {
                 tempFrac *= 8;
                 const digit = Math.floor(tempFrac);
@@ -350,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Convert fractional part
         if (fracPart > 0) {
             let tempFrac = fracPart;
-            let precision = 6; // Limit fractional precision
+            let precision = 6; 
             while (precision-- > 0 && tempFrac > 0) {
                 tempFrac *= 16;
                 const digit = Math.floor(tempFrac);
@@ -388,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
         const resultDecimal = multiplicandDecimal * multiplierDecimal;
     
-        // Customize bitLength and fractional bits
         const resultBinary = decimalToSignedBinary(resultDecimal, 16, 8);
     
         return {
@@ -407,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Handle edge case for minimum representable value
         if (decimalValue === -(2 ** (binaryNumber.length - 1))) {
             return {
-                binary: convertToNibbleFormat(binaryNumber), // It remains the same in two’s complement
+                binary: convertToNibbleFormat(binaryNumber), 
                 octal: decimalToOctal(decimalValue),
                 decimal: decimalValue.toString(),
                 hex: decimalToHex(decimalValue)
@@ -425,34 +402,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-    // Decimal to Binary conversion
-    function decimalToBinary(decimal) {
-        const isNegative = decimal < 0;
-        const absDecimal = Math.abs(decimal);
-
-        const intPart = Math.floor(absDecimal);
-        const fracPart = absDecimal - intPart;
-
-        // Convert integer part
-        let binaryInt = intPart.toString(2);
-        let binaryFrac = '';
-
-        // Convert fractional part
-        if (fracPart > 0) {
-            let tempFrac = fracPart;
-            let precision = 6; // Limit fractional precision
-            while (precision-- > 0 && tempFrac > 0) {
-                tempFrac *= 2;
-                const digit = Math.floor(tempFrac);
-                binaryFrac += digit;
-                tempFrac -= digit;
-            }
-        }
-
-        // Combine parts and handle negative numbers
-        const result = binaryFrac ? `${binaryInt}.${binaryFrac}` : binaryInt;
-        return isNegative ? `-${result}` : result;
-    }
+   
     function convertToNibbleFormatInput(binaryStr) {
         // Remove any existing decimal point
         const [intPart, fracPart] = binaryStr.split('.');
@@ -474,7 +424,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Combine nibbles with space separator
         const formattedInt = intNibbles.join('');
         const formattedFrac = fracNibbles.length > 0 ? '.' + fracNibbles.join('') : '';
 

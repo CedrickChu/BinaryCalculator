@@ -21,34 +21,57 @@ document.addEventListener('DOMContentLoaded', function () {
             const inputContainer = document.createElement('div');
             inputContainer.className = 'conversion-input-container';
             inputContainer.innerHTML = `
-          <div class="input-group">
-            <label for="input-number">Enter ${conversion.charAt(0).toUpperCase() + conversion.slice(1)} Number:</label>
-            <input type="text" id="input-number" class="number-input" placeholder="Enter number">
-          </div>
-          <div class="input-group">
-            <button id="perform-conversion" class="menu-button">Convert</button>
-          </div>
-          <div class="result-container">
-            <h3>Results:</h3>
-            <div class="result-row">
-              <label>Binary:</label>
-              <span id="binary-result"></span>
-            </div>
-            <div class="result-row">
-              <label>Decimal:</label>
-              <span id="decimal-result"></span>
-            </div>
-            <div class="result-row">
-              <label>Hexa:</label>
-              <span id="hex-result"></span>
-            </div>
-            <div class="result-row">
-              <label>Octal:</label>
-              <span id="octal-result"></span>
-            </div>
-            
-          </div>
-        `;
+                <div class="form-group">
+                    <label for="input-number">Enter ${conversion.charAt(0).toUpperCase() + conversion.slice(1)} Number:</label>
+                    <input type="text" id="input-number" class="form-control" placeholder="Enter number">
+                </div><br>
+                <div class="input-group">
+                    <button id="perform-conversion" class="btn btn-primary">Convert</button>
+                </div>
+                <div class="result-container">
+                    <h3>Results:</h3>
+                    <div class="container mt-4">
+                        <div class="row ">
+                            <div class="col-12">
+                                <label for="binary" class="form-label">Binary:</label>
+                                <div class="input-group">
+                                    <input type="text" id="binary-result" class="form-control" readonly aria-label="Binary result">
+                                    <span class="input-group-text">2</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12">
+                                <label for="decimal" class="form-label">Decimal:</label>
+                                <div class="input-group">
+                                    <input type="text" id="decimal-result" class="form-control" readonly aria-label="Decimal result">
+                                    <span class="input-group-text">10</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12">
+                                <label for="hex" class="form-label">Hexa:</label>
+                                <div class="input-group">
+                                    <input type="text" id="hex-result" class="form-control" readonly aria-label="Hexadecimal result">
+                                    <span class="input-group-text">16</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12">
+                                <label for="octal" class="form-label">Octal:</label>
+                                <div class="input-group">
+                                    <input type="text" id="octal-result" class="form-control" readonly aria-label="Octal result">
+                                    <span class="input-group-text">8</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                
+            `;
 
             menuContainer.appendChild(inputContainer);
 
@@ -64,8 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             alert('Invalid binary input. Only 0s and 1s allowed.');
                             return;
                         }
-                        nibbleInputNumber = convertToNibbleFormatInput(inputNumber)
-                        decimalValue = binaryToDecimal16Bit(nibbleInputNumber);
+                        decimalValue = binaryToDecimal16Bit(inputNumber);
                         break;
                     case 'decimal':
                         decimalValue = parseFloat(inputNumber);
@@ -87,72 +109,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // Display results
-                document.getElementById('binary-result').textContent = convertToNibbleFormat(decimalToBinary16Bit(decimalValue));
-                document.getElementById('decimal-result').textContent = decimalValue;
-                document.getElementById('hex-result').textContent = decimalToHex16Bit(Math.abs(decimalValue));
-                document.getElementById('octal-result').textContent = decimalToOctal16Bit(Math.abs(decimalValue));
+                document.getElementById('binary-result').value = convertToNibbleFormat(decimalToSignedBinary(decimalValue));
+                document.getElementById('decimal-result').value = decimalValue;
+                document.getElementById('hex-result').value = decimalToHex(decimalValue);
+                document.getElementById('octal-result').value = decimalToOctal(decimalValue);
             });
         });
     });
-
-    // Conversion helper functions
-    function convertFromBinary(input, targetSystem) {
-        const isNegative = input.startsWith('-');
-        const absInput = isNegative ? input.slice(1) : input;
-
-        const decimalValue = binaryToDecimal16Bit(absInput);
-        const convertedValue = convertDecimalToSystem(decimalValue, targetSystem);
-
-        return isNegative ? `-${convertedValue}` : convertedValue;
-    }
-
-    function convertFromDecimal(input, targetSystem) {
-        const decimalValue = parseFloat(input);
-        return convertDecimalToSystem(decimalValue, targetSystem);
-    }
-
-    function convertFromOctal(input, targetSystem) {
-        const isNegative = input.startsWith('-');
-        const absInput = isNegative ? input.slice(1) : input;
-
-        const decimalValue = parseInt(absInput, 8);
-        const convertedValue = convertDecimalToSystem(decimalValue, targetSystem);
-
-        return isNegative ? `-${convertedValue}` : convertedValue;
-    }
-
-    function convertFromHex(input, targetSystem) {
-        const isNegative = input.startsWith('-');
-        const absInput = isNegative ? input.slice(1) : input;
-
-        const decimalValue = parseInt(absInput, 16);
-        const convertedValue = convertDecimalToSystem(decimalValue, targetSystem);
-
-        return isNegative ? `-${convertedValue}` : convertedValue;
-    }
-
-    function convertDecimalToSystem(decimal, targetSystem) {
-        const isNegative = decimal < 0;
-        const absDecimal = Math.abs(decimal);
-
-        let result;
-        switch (targetSystem) {
-            case 'binary':
-                result = decimalToBinary16Bit(absDecimal);
-                break;
-            case 'decimal':
-                result = decimal.toString();
-                break;
-            case 'octal':
-                result = decimalToOctal16Bit(absDecimal);
-                break;
-            case 'hex':
-                result = decimalToHex16Bit(absDecimal);
-                break;
-        }
-
-        return isNegative ? `-${result}` : result;
-    }
 
     function binaryToDecimal16Bit(binary) {
         const [intPart, fracPart] = binary.split('.');
@@ -176,17 +139,17 @@ document.addEventListener('DOMContentLoaded', function () {
         return decimalValue;
     }
 
-    function decimalToOctal16Bit(decimal) {
+    function decimalToOctal(decimal) {
         const intPart = Math.floor(decimal);
         const fracPart = decimal - intPart;
 
-        let octalInt = intPart.toString(8).padStart(3, '0');
+        let octalInt = intPart.toString(8);
         let octalFrac = '';
 
         // Convert fractional part
         if (fracPart > 0) {
             let tempFrac = fracPart;
-            let precision = 3; // Limit to 3 fractional digits for 8-bit representation
+            let precision = 6; // Limit fractional precision
             while (precision-- > 0 && tempFrac > 0) {
                 tempFrac *= 8;
                 const digit = Math.floor(tempFrac);
@@ -198,17 +161,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return octalFrac ? `${octalInt}.${octalFrac}` : octalInt;
     }
 
-    function decimalToHex16Bit(decimal) {
+    function decimalToHex(decimal) {
         const intPart = Math.floor(decimal);
         const fracPart = decimal - intPart;
 
-        let hexInt = intPart.toString(16).toUpperCase().padStart(2, '0');
+        let hexInt = intPart.toString(16).toUpperCase();
         let hexFrac = '';
 
-        // Convert fractional part
         if (fracPart > 0) {
             let tempFrac = fracPart;
-            let precision = 2; // Limit to 2 fractional digits for 8-bit representation
+            let precision = 6;
             while (precision-- > 0 && tempFrac > 0) {
                 tempFrac *= 16;
                 const digit = Math.floor(tempFrac);
@@ -220,44 +182,22 @@ document.addEventListener('DOMContentLoaded', function () {
         return hexFrac ? `${hexInt}.${hexFrac}` : hexInt;
     }
 
-    function decimalToBinary16Bit(decimal) {
+    function decimalToSignedBinary(decimal, totalBits = 12, fracBits = 4) {
         const isNegative = decimal < 0;
         const absDecimal = Math.abs(decimal);
 
-        // Convert integer part to binary
-        let intPart = Math.floor(absDecimal);
-        let fracPart = absDecimal - intPart;
+        const fixedPointValue = Math.round(absDecimal * Math.pow(2, fracBits));
+        let binary = fixedPointValue.toString(2).padStart(totalBits, '0');
 
-        let binaryInt = intPart.toString(2);
-
-        // Determine minimum bit length (8-bit or 16-bit)
-        let bitLength = binaryInt.length > 7 ? 16 : 8;
-        binaryInt = binaryInt.padStart(bitLength - 1, '0'); // Reserve 1 bit for sign
-
-        // Convert fractional part
-        let binaryFrac = '';
-        let tempFrac = fracPart;
-        let precision = 8; // 8-bit precision for fractional part
-
-        while (precision-- > 0 && tempFrac > 0) {
-            tempFrac *= 2;
-            let bit = Math.floor(tempFrac);
-            binaryFrac += bit;
-            tempFrac -= bit;
-        }
-
-        // Ensure 8-bit fractional part
-        binaryFrac = binaryFrac.padEnd(8, '0');
-
-        let binaryResult = `${binaryInt}.${binaryFrac}`;
-
-        // Handle negative numbers using two’s complement
         if (isNegative) {
-            let twosComp = twosComplement(binaryInt);
-            binaryResult = `${twosComp}.${binaryFrac}`;
+            binary = twosComplement(binary);
         }
 
-        return binaryResult;
+        // Insert binary point
+        const intPart = binary.slice(0, totalBits - fracBits);
+        const fracPart = binary.slice(totalBits - fracBits);
+
+        return intPart + '.' + fracPart;
     }
 
     function twosComplement(binaryStr) {
@@ -281,7 +221,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return result;
     }
 
-
     // Input validation function
     function isValidBinaryInput(input) {
         return /^[01]+(\.[01]+)?$/.test(input);
@@ -294,6 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function isValidOctalInput(input) {
         return /^[0-7]+(\.[0-7]+)?$/.test(input);
     }
+
     function convertToNibbleFormat(binaryStr) {
         // Remove any existing decimal point
         const [intPart, fracPart] = binaryStr.split('.');
@@ -321,6 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return formattedInt + formattedFrac;
     }
+
     // 2's Complement functionality (signed)
     performComplementButton.addEventListener('click', function () {
         const binaryNumber = binaryInputComplement.value.trim();
@@ -335,13 +276,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Display results
         document.getElementById('complement-operation').textContent = `2's complement of ${decimalValue} = ${result.decimal}`;
-        binaryComplementResult.textContent = result.binary;
-        octalComplementResult.textContent = result.octal;
-        decimalComplementResult.textContent = result.decimal;
-        hexComplementResult.textContent = result.hex;
+        binaryComplementResult.value = result.binary;
+        octalComplementResult.value = result.octal;
+        decimalComplementResult.value = result.decimal;
+        hexComplementResult.value = result.hex;
     });
-
-
 
     // Add event listeners to validate input
     document.addEventListener('DOMContentLoaded', function () {

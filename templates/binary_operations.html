@@ -1,209 +1,209 @@
 {% extends 'base.html' %}
 {% block content %}
 
-  <div class="main-content">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Binary Operation</li>
-        <li class="breadcrumb-item"><a href="/number-conversion">Number Conversion</a></li>
-        </ol>
-    </nav>
-    <div class="menu-container">
-        <div class="tools">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-          </div><br>
-        <h1 class="calculator-title">Binary Operations</h1>
-        <div class="menu-buttons">
-            <button class="menu-button operation-button" data-operation="addition">Addition</button>
-            <button class="menu-button operation-button" data-operation="subtraction">Subtraction</button>
-            <button class="menu-button operation-button" data-operation="division">Division</button>
-            <button class="menu-button operation-button" data-operation="multiplication">Multiplication</button>
-            <button class="menu-button operation-button" data-operation="complement">Negative (2's Complement)</button>
-            <a href="/" class="menu-button back-button">Back to Main Menu</a>
+<div class="main-content">
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Binary Operation</li>
+    <li class="breadcrumb-item"><a href="/number-conversion">Number Conversion</a></li>
+    </ol>
+</nav>
+<div class="menu-container">
+    <div class="tools">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        </div><br>
+    <h1 class="calculator-title">Binary Operations</h1>
+    <div class="menu-buttons">
+        <button class="menu-button operation-button" data-operation="addition">Addition</button>
+        <button class="menu-button operation-button" data-operation="subtraction">Subtraction</button>
+        <button class="menu-button operation-button" data-operation="division">Division</button>
+        <button class="menu-button operation-button" data-operation="multiplication">Multiplication</button>
+        <button class="menu-button operation-button" data-operation="complement">Negative (2's Complement)</button>
+        <a href="/" class="menu-button exit-button">Back to Main Menu</a>
+    </div>
+    
+    <div class="operation-input-container" id="division-container" style="display:none;">
+    <div class="form-group">
+        <label for="binary-input-dividend">Dividend:</label>
+        <input class='form-control' type="text"  pattern="[01]"  id="binary-input-dividend" class="binary-input" placeholder="Enter dividend (e.g., 0000.0000)" /><br>
+    </div>
+    <div class="form-group">
+        <label for="binary-input-divisor">Divisor:</label>
+        <input class='form-control' type="text"  pattern="[01]"  id="binary-input-divisor" class="binary-input" placeholder="Enter divisor (e.g., 0000.0000)" /><br>
+    </div>
+    <div class="form-group">
+        <button id="perform-division" class="menu-button btn btn-primary">Perform Division</button>
+    </div>
+    <div class="result-container">
+        <h3>Results:</h3>
+        <div class="result-row">
+        <label>Operation: </label>
+        <span id="division-operation"></span>
         </div>
-      
-      <div class="operation-input-container" id="division-container" style="display:none;">
+        <div class="result-row">
+        <label>Binary: </label>
+        <span id="binary-division-result"></span>
+        </div>
+        <div class="result-row">
+        <label>Octal: </label>
+        <span id="octal-division-result"></span>
+        </div>
+        <div class="result-row">
+        <label>Decimal:</label>
+        <span id="decimal-division-result"></span>
+        </div>
+        <div class="result-row">
+        <label>Hexadecimal: </label>
+        <span id="hex-division-result"></span>
+        </div>
+    </div>
+    </div>
+    <div class="operation-input-container" id="multiplication-container" style="display:none;">
         <div class="form-group">
-          <label for="binary-input-dividend">Dividend:</label>
-          <input class='form-control' type="text"  pattern="[01]"  id="binary-input-dividend" class="binary-input" placeholder="Enter dividend (e.g., 0000.0000)" /><br>
+            <label for="binary-input-multiplicand">Multiplicand:</label>
+            <input class='form-control' type="text"  pattern="[01]"  id="binary-input-multiplicand" class="binary-input" placeholder="Enter multiplicand (e.g., 0000.0000)" /><br>
         </div>
         <div class="form-group">
-          <label for="binary-input-divisor">Divisor:</label>
-          <input class='form-control' type="text"  pattern="[01]"  id="binary-input-divisor" class="binary-input" placeholder="Enter divisor (e.g., 0000.0000)" /><br>
+            <label for="binary-input-multiplier">Multiplier:</label>
+            <input class='form-control' type="text"  pattern="[01]"  id="binary-input-multiplier" class="binary-input" placeholder="Enter multiplier (e.g., 0000.0000)" /><br>
         </div>
         <div class="form-group">
-          <button id="perform-division" class="menu-button btn btn-primary">Perform Division</button>
+            <button id="perform-multiplication" class="menu-button btn btn-primary">Perform Multiplication</button>
         </div>
         <div class="result-container">
-          <h3>Results:</h3>
-          <div class="result-row">
-            <label>Operation: </label>
-            <span id="division-operation"></span>
-          </div>
-          <div class="result-row">
-            <label>Binary: </label>
-            <span id="binary-division-result"></span>
-          </div>
-          <div class="result-row">
-            <label>Octal: </label>
-            <span id="octal-division-result"></span>
-          </div>
-          <div class="result-row">
-            <label>Decimal:</label>
-            <span id="decimal-division-result"></span>
-          </div>
-          <div class="result-row">
-            <label>Hexadecimal: </label>
-            <span id="hex-division-result"></span>
-          </div>
-        </div>
-      </div>
-      <div class="operation-input-container" id="multiplication-container" style="display:none;">
-        <div class="form-group">
-          <label for="binary-input-multiplicand">Multiplicand:</label>
-          <input class='form-control' type="text"  pattern="[01]"  id="binary-input-multiplicand" class="binary-input" placeholder="Enter multiplicand (e.g., 0000.0000)" /><br>
-        </div>
-        <div class="form-group">
-          <label for="binary-input-multiplier">Multiplier:</label>
-          <input class='form-control' type="text"  pattern="[01]"  id="binary-input-multiplier" class="binary-input" placeholder="Enter multiplier (e.g., 0000.0000)" /><br>
-        </div>
-        <div class="form-group">
-          <button id="perform-multiplication" class="menu-button btn btn-primary">Perform Multiplication</button>
-        </div>
-        <div class="result-container">
-          <h3>Results:</h3>
-          <div class="result-row">
+            <h3>Results:</h3>
+            <div class="result-row">
             <label>Operation: </label>
             <span id="multiplication-operation"></span>
-          </div>
-          <div class="result-row">
+            </div>
+            <div class="result-row">
             <label>Binary: </label>
             <span id="binary-multiplication-result"></span>
-          </div>
-          <div class="result-row">
+            </div>
+            <div class="result-row">
             <label>Octal: </label>
             <span id="octal-multiplication-result"></span>
-          </div>
-          <div class="result-row">
+            </div>
+            <div class="result-row">
             <label>Decimal:</label>
             <span id="decimal-multiplication-result"></span>
-          </div>
-          <div class="result-row">
+            </div>
+            <div class="result-row">
             <label>Hexadecimal: </label>
             <span id="hex-multiplication-result"></span>
-          </div>
+            </div>
         </div>
-      </div>
-      <div class="operation-input-container" id="complement-container" style="display:none;">
+    </div>
+    <div class="operation-input-container" id="complement-container" style="display:none;">
         <div class="form-group">
-          <label for="binary-input-complement">Binary Number:</label>
-          <input class='form-control' type="text"  pattern="[01]"  id="binary-input-complement" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
+            <label for="binary-input-complement">Binary Number:</label>
+            <input class='form-control' type="text"  pattern="[01]"  id="binary-input-complement" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
         </div>
         <div class="form-group">
-          <button id="perform-complement" class="menu-button btn btn-primary">Calculate 2's Complement</button>
+            <button id="perform-complement" class="menu-button btn btn-primary">Calculate 2's Complement</button>
         </div>
         <div class="result-container">
-          <h3>Results:</h3>
-          <div class="result-row">
+        <h3>Results:</h3>
+        <div class="result-row">
             <label>Operation: </label>
             <span id="complement-operation"></span>
-          </div>
-          <div class="result-row">
+        </div>
+        <div class="result-row">
             <label>Binary: </label>
             <span id="binary-complement-result"></span>
-          </div>
-          <div class="result-row">
+        </div>
+        <div class="result-row">
             <label>Octal: </label>
             <span id="octal-complement-result"></span>
-          </div>
-          <div class="result-row">
+        </div>
+        <div class="result-row">
             <label>Decimal:</label>
             <span id="decimal-complement-result"></span>
-          </div>
-          <div class="result-row">
+        </div>
+        <div class="result-row">
             <label>Hexadecimal: </label>
             <span id="hex-complement-result"></span>
-          </div>
         </div>
-      </div>
-      <div class="operation-input-container" id="addition-container" style="display:none;">
-        <div class="form-group">
-          <label for="binary-input1">First Binary Number:</label>
-          <input class='form-control' type="text"  pattern="[01]"  id="binary-input1" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
         </div>
+    </div>
+    <div class="operation-input-container" id="addition-container" style="display:none;">
         <div class="form-group">
-          <label for="binary-input2">Second Binary Number:</label>
-          <input class='form-control' type="text"  pattern="[01]"  id="binary-input2" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
+            <label for="binary-input1">First Binary Number:</label>
+            <input class='form-control' type="text"  pattern="[01]"  id="binary-input1" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
         </div>
         <div class="form-group">
-          <button id="perform-addition" class="menu-button btn btn-primary">Perform Addition</button>
+            <label for="binary-input2">Second Binary Number:</label>
+            <input class='form-control' type="text"  pattern="[01]"  id="binary-input2" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
+        </div>
+        <div class="form-group">
+            <button id="perform-addition" class="menu-button btn btn-primary">Perform Addition</button>
         </div>
         <div class="result-container">
-          <h3>Results:</h3>
-          <div class="result-row">
+            <h3>Results:</h3>
+            <div class="result-row">
             <label>Operation: </label>
             <span id="addition-operation"></span>
-          </div>
-          <div class="result-row">
+            </div>
+            <div class="result-row">
             <label>Binary: </label>
             <span id="binary-result"></span>
-          </div>
-          <div class="result-row">
+            </div>
+            <div class="result-row">
             <label>Octal: </label>
             <span id="octal-result"></span>
-          </div>
-          <div class="result-row">
+            </div>
+            <div class="result-row">
             <label>Decimal:</label>
             <span id="decimal-result"></span>
-          </div>
-          <div class="result-row">
+            </div>
+            <div class="result-row">
             <label>Hexadecimal: </label>
             <span id="hex-result"></span>
-          </div>
+            </div>
         </div>
-      </div>
-      <div class="operation-input-container" id="subtraction-container" style="display:none;">
+    </div>
+    <div class="operation-input-container" id="subtraction-container" style="display:none;">
         <div class="form-group">
-          <label for="binary-input-minuend">Minuend:</label>
-          <input class='form-control' type="text"  pattern="[01]"  id="binary-input-minuend" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
-        </div>
-        <div class="form-group">
-          <label for="binary-input-subtrahend">Subtrahend:</label>
-          <input class='form-control' type="text"  pattern="[01]"  id="binary-input-subtrahend" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
+            <label for="binary-input-minuend">Minuend:</label>
+            <input class='form-control' type="text"  pattern="[01]"  id="binary-input-minuend" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
         </div>
         <div class="form-group">
-          <button id="perform-subtraction" class="menu-button btn btn-primary">Perform Subtraction</button>
+            <label for="binary-input-subtrahend">Subtrahend:</label>
+            <input class='form-control' type="text"  pattern="[01]"  id="binary-input-subtrahend" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
+        </div>
+        <div class="form-group">
+            <button id="perform-subtraction" class="menu-button btn btn-primary">Perform Subtraction</button>
         </div>
         <div class="result-container">
-          <h3>Results:</h3>
-          <div class="result-row">
-            <label>Operation: </label>
-            <span id="subtraction-operation"></span>
-          </div>
-          <div class="result-row">
-            <label>Binary: </label>
-            <span id="binary-subtraction-result"></span>
-          </div>
-          <div class="result-row">
-            <label>Octal: </label>
-            <span id="octal-subtraction-result"></span>
-          </div>
-          <div class="result-row">
-            <label>Decimal: </label>
-            <span id="decimal-subtraction-result"></span>
-          </div>
-          <div class="result-row">
-            <label>Hexadecimal: </label>
-            <span id="hex-subtraction-result"></span>
-          </div>
+            <h3>Results:</h3>
+        <div class="result-row">
+                <label>Operation: </label>
+                <span id="subtraction-operation"></span>
         </div>
+        <div class="result-row">
+                <label>Binary: </label>
+                <span id="binary-subtraction-result"></span>
         </div>
-      </div><br>
-      <button class="menu-button return-button btn btn-danger" style="display:none;">Return to Operations</button>
+        <div class="result-row">
+                <label>Octal: </label>
+                <span id="octal-subtraction-result"></span>
+        </div>
+        <div class="result-row">
+                <label>Decimal: </label>
+                <span id="decimal-subtraction-result"></span>
+        </div>
+        <div class="result-row">
+                <label>Hexadecimal: </label>
+                <span id="hex-subtraction-result"></span>
+        </div>
     </div>
+</div><br>
+<button class="menu-button return-button exit-button" style="display:none;">Return to Operations</button>
+</div><br>
+    
     {% include 'footer.html' %}
   </div>
   
