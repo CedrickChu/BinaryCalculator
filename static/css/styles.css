@@ -19,6 +19,7 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
+
 .main-content {
     width: 100%;
     min-height: 100vh;
@@ -36,7 +37,7 @@ body {
     z-index: 1;
     border-radius: 8px;
     width: 90%;
-    max-width: 400px;
+    max-width: 600px;
 }
 .tools {
     display: flex;
@@ -77,7 +78,14 @@ body {
     flex-direction: column;
     gap: 1rem;
 }
-
+#return-container {
+    width: 90%;
+    margin: auto;
+    border-radius: 0.5rem;
+}
+#return-container .menu-button{
+    width: 100%;
+}
 .menu-button {
     background-color: var(--button-bg);
     color: var(--text-color);
@@ -105,4 +113,22 @@ body {
 .exit-button:hover {
     background-color: #c73e54;
 }
+.division-visual {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
 
+#steps-table th, #steps-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#steps-table tr:nth-child(odd) {
+    background-color: #f1f1f1;
+}
+
+.result-container {
+    margin-top: 20px;
+}

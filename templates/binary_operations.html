@@ -1,212 +1,346 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="main-content">
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Binary Operation</li>
-    <li class="breadcrumb-item"><a href="/number-conversion">Number Conversion</a></li>
-    </ol>
-</nav>
-<div class="menu-container">
-    <div class="tools">
-        <span class="dot dot-red"></span>
-        <span class="dot dot-yellow"></span>
-        <span class="dot dot-green"></span>
-        </div><br>
-    <h1 class="calculator-title">Binary Operations</h1>
-    <div class="menu-buttons">
-        <button class="menu-button operation-button" data-operation="addition">Addition</button>
-        <button class="menu-button operation-button" data-operation="subtraction">Subtraction</button>
-        <button class="menu-button operation-button" data-operation="division">Division</button>
-        <button class="menu-button operation-button" data-operation="multiplication">Multiplication</button>
-        <button class="menu-button operation-button" data-operation="complement">Negative (2's Complement)</button>
-        <a href="/" class="menu-button exit-button">Back to Main Menu</a>
-    </div>
-    
-    <div class="operation-input-container" id="division-container" style="display:none;">
-    <div class="form-group">
-        <label for="binary-input-dividend">Dividend:</label>
-        <input class='form-control' type="text"  pattern="[01]"  id="binary-input-dividend" class="binary-input" placeholder="Enter dividend (e.g., 0000.0000)" /><br>
-    </div>
-    <div class="form-group">
-        <label for="binary-input-divisor">Divisor:</label>
-        <input class='form-control' type="text"  pattern="[01]"  id="binary-input-divisor" class="binary-input" placeholder="Enter divisor (e.g., 0000.0000)" /><br>
-    </div>
-    <div class="form-group">
-        <button id="perform-division" class="menu-button btn btn-primary">Perform Division</button>
-    </div>
-    <div class="result-container">
-        <h3>Results:</h3>
-        <div class="result-row">
-        <label>Operation: </label>
-        <span id="division-operation"></span>
+  <div class="main-content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Binary Operation</li>
+        <li class="breadcrumb-item"><a href="/number-conversion">Number Conversion</a></li>
+        </ol>
+    </nav>
+    <div class="menu-container">
+        <div class="tools">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div><br>
+        <h1 class="calculator-title">Binary Operations</h1>
+        <div class="menu-buttons">
+            <button class="menu-button operation-button" data-operation="addition">Addition</button>
+            <button class="menu-button operation-button" data-operation="subtraction">Subtraction</button>
+            <button class="menu-button operation-button" data-operation="division">Division</button>
+            <button class="menu-button operation-button" data-operation="multiplication">Multiplication</button>
+            <button class="menu-button operation-button" data-operation="complement">Negative (2's Complement)</button>
+            <a href="/" class="menu-button exit-button">Back to Main Menu</a>
         </div>
-        <div class="result-row">
-        <label>Binary: </label>
-        <span id="binary-division-result"></span>
+        <div id='return-container' style="display:none;">
+            <button class="menu-button return-button exit-button">Return to Operations</button>
         </div>
-        <div class="result-row">
-        <label>Octal: </label>
-        <span id="octal-division-result"></span>
+            
+        <div class="operation-input-container" id="division-container" style="display:none;">
+            <div class="form-group">
+                <label for="binary-input-dividend" class="form-label">Dividend:</label>
+                <input type="text" id="binary-input-dividend" class="form-control" pattern="[01]" placeholder="Enter dividend (e.g., 0000.0000)">
+            </div>
+            <div class="form-group">
+                <label for="binary-input-divisor" class="form-label">Divisor:</label>
+                <input type="text" id="binary-input-divisor" class="form-control" pattern="[01]" placeholder="Enter divisor (e.g., 0000.0000)">
+            </div><br>
+            <div class="input-group">
+                <button id="perform-division" class="btn btn-primary">Perform Division</button>
+            </div>
+        
+            <div class="result-container mt-4">
+                <h3>Results:</h3>
+                <div class="container">
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label class="form-label">Operation:</label>
+                            <input type="text" id="division-operation" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label class="form-label">Binary:</label>
+                            <div class="input-group">
+                                <input type="text" id="binary-division-result" class="form-control" readonly>
+                                <span class="input-group-text">2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label class="form-label">Octal:</label>
+                            <div class="input-group">
+                                <input type="text" id="octal-division-result" class="form-control" readonly>
+                                <span class="input-group-text">8</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label class="form-label">Decimal:</label>
+                            <div class="input-group">
+                                <input type="text" id="decimal-division-result" class="form-control" readonly>
+                                <span class="input-group-text">10</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label class="form-label">Hexadecimal:</label>
+                            <div class="input-group">
+                                <input type="text" id="hex-division-result" class="form-control" readonly>
+                                <span class="input-group-text">16</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="result-row">
-        <label>Decimal:</label>
-        <span id="decimal-division-result"></span>
-        </div>
-        <div class="result-row">
-        <label>Hexadecimal: </label>
-        <span id="hex-division-result"></span>
-        </div>
-    </div>
-    </div>
+        
     <div class="operation-input-container" id="multiplication-container" style="display:none;">
         <div class="form-group">
-            <label for="binary-input-multiplicand">Multiplicand:</label>
-            <input class='form-control' type="text"  pattern="[01]"  id="binary-input-multiplicand" class="binary-input" placeholder="Enter multiplicand (e.g., 0000.0000)" /><br>
+            <label for="binary-input-multiplicand" class="form-label">Multiplicand:</label>
+            <input type="text" id="binary-input-multiplicand" class="form-control" pattern="[01]" placeholder="Enter multiplicand (e.g., 0000.0000)"><br>
         </div>
         <div class="form-group">
-            <label for="binary-input-multiplier">Multiplier:</label>
-            <input class='form-control' type="text"  pattern="[01]"  id="binary-input-multiplier" class="binary-input" placeholder="Enter multiplier (e.g., 0000.0000)" /><br>
+            <label for="binary-input-multiplier" class="form-label">Multiplier:</label>
+            <input type="text" id="binary-input-multiplier" class="form-control" pattern="[01]" placeholder="Enter multiplier (e.g., 0000.0000)">
+        </div><br>
+        <div class="input-group">
+            <button id="perform-multiplication" class="btn btn-primary">Perform Multiplication</button>
         </div>
-        <div class="form-group">
-            <button id="perform-multiplication" class="menu-button btn btn-primary">Perform Multiplication</button>
-        </div>
-        <div class="result-container">
+
+        <div class="result-container mt-4">
             <h3>Results:</h3>
-            <div class="result-row">
-            <label>Operation: </label>
-            <span id="multiplication-operation"></span>
-            </div>
-            <div class="result-row">
-            <label>Binary: </label>
-            <span id="binary-multiplication-result"></span>
-            </div>
-            <div class="result-row">
-            <label>Octal: </label>
-            <span id="octal-multiplication-result"></span>
-            </div>
-            <div class="result-row">
-            <label>Decimal:</label>
-            <span id="decimal-multiplication-result"></span>
-            </div>
-            <div class="result-row">
-            <label>Hexadecimal: </label>
-            <span id="hex-multiplication-result"></span>
+            <div class="container">
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Operation:</label>
+                        <input type="text" id="multiplication-operation" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Binary:</label>
+                        <div class="input-group">
+                            <input type="text" id="binary-multiplication-result" class="form-control" readonly>
+                            <span class="input-group-text">2</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Octal:</label>
+                        <div class="input-group">
+                            <input type="text" id="octal-multiplication-result" class="form-control" readonly>
+                            <span class="input-group-text">8</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Decimal:</label>
+                        <div class="input-group">
+                            <input type="text" id="decimal-multiplication-result" class="form-control" readonly>
+                            <span class="input-group-text">10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Hexadecimal:</label>
+                        <div class="input-group">
+                            <input type="text" id="hex-multiplication-result" class="form-control" readonly>
+                            <span class="input-group-text">16</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <!-- 2's Complement Container -->
     <div class="operation-input-container" id="complement-container" style="display:none;">
         <div class="form-group">
-            <label for="binary-input-complement">Binary Number:</label>
-            <input class='form-control' type="text"  pattern="[01]"  id="binary-input-complement" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
+            <label for="binary-input-complement" class="form-label">Binary Number:</label>
+            <input type="text" id="binary-input-complement" class="form-control" pattern="[01]" placeholder="Enter binary number (e.g., 0000.0000)">
         </div>
-        <div class="form-group">
-            <button id="perform-complement" class="menu-button btn btn-primary">Calculate 2's Complement</button>
+        <div class="input-group mt-4">
+            <button id="perform-complement" class="btn btn-primary w-100">Calculate 2's Complement</button>
         </div>
-        <div class="result-container">
-        <h3>Results:</h3>
-        <div class="result-row">
-            <label>Operation: </label>
-            <span id="complement-operation"></span>
-        </div>
-        <div class="result-row">
-            <label>Binary: </label>
-            <span id="binary-complement-result"></span>
-        </div>
-        <div class="result-row">
-            <label>Octal: </label>
-            <span id="octal-complement-result"></span>
-        </div>
-        <div class="result-row">
-            <label>Decimal:</label>
-            <span id="decimal-complement-result"></span>
-        </div>
-        <div class="result-row">
-            <label>Hexadecimal: </label>
-            <span id="hex-complement-result"></span>
-        </div>
+        
+        <div class="result-container mt-4">
+            <h3>Results:</h3>
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label">Operation:</label>
+                        <input type="text" id="complement-operation" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label">Binary:</label>
+                        <div class="input-group">
+                            <input type="text" id="binary-complement-result" class="form-control" readonly>
+                            <span class="input-group-text">2</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label">Octal:</label>
+                        <div class="input-group">
+                            <input type="text" id="octal-complement-result" class="form-control" readonly>
+                            <span class="input-group-text">8</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label">Decimal:</label>
+                        <div class="input-group">
+                            <input type="text" id="decimal-complement-result" class="form-control" readonly>
+                            <span class="input-group-text">10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label">Hexadecimal:</label>
+                        <div class="input-group">
+                            <input type="text" id="hex-complement-result" class="form-control" readonly>
+                            <span class="input-group-text">16</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
     <div class="operation-input-container" id="addition-container" style="display:none;">
         <div class="form-group">
-            <label for="binary-input1">First Binary Number:</label>
-            <input class='form-control' type="text"  pattern="[01]"  id="binary-input1" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
+            <label for="binary-input1" class="form-label">First Binary Number:</label>
+            <input type="text" id="binary-input1" class="form-control" pattern="[01]" placeholder="Enter binary number (e.g., 0000.0000)"><br>
         </div>
         <div class="form-group">
-            <label for="binary-input2">Second Binary Number:</label>
-            <input class='form-control' type="text"  pattern="[01]"  id="binary-input2" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
+            <label for="binary-input2" class="form-label">Second Binary Number:</label>
+            <input type="text" id="binary-input2" class="form-control" pattern="[01]" placeholder="Enter binary number (e.g., 0000.0000)">
+        </div><br>
+        <div class="input-group">
+            <button id="perform-addition" class="btn btn-primary">Perform Addition</button>
         </div>
-        <div class="form-group">
-            <button id="perform-addition" class="menu-button btn btn-primary">Perform Addition</button>
-        </div>
-        <div class="result-container">
+    
+        <div class="result-container mt-4">
             <h3>Results:</h3>
-            <div class="result-row">
-            <label>Operation: </label>
-            <span id="addition-operation"></span>
-            </div>
-            <div class="result-row">
-            <label>Binary: </label>
-            <span id="binary-result"></span>
-            </div>
-            <div class="result-row">
-            <label>Octal: </label>
-            <span id="octal-result"></span>
-            </div>
-            <div class="result-row">
-            <label>Decimal:</label>
-            <span id="decimal-result"></span>
-            </div>
-            <div class="result-row">
-            <label>Hexadecimal: </label>
-            <span id="hex-result"></span>
+            <div class="container">
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Operation:</label>
+                        <input type="text" id="addition-operation" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Binary:</label>
+                        <div class="input-group">
+                            <input type="text" id="binary-result" class="form-control" readonly>
+                            <span class="input-group-text">2</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Octal:</label>
+                        <div class="input-group">
+                            <input type="text" id="octal-result" class="form-control" readonly>
+                            <span class="input-group-text">8</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Decimal:</label>
+                        <div class="input-group">
+                            <input type="text" id="decimal-result" class="form-control" readonly>
+                            <span class="input-group-text">10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Hexadecimal:</label>
+                        <div class="input-group">
+                            <input type="text" id="hex-result" class="form-control" readonly>
+                            <span class="input-group-text">16</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="operation-input-container" id="subtraction-container" style="display:none;">
         <div class="form-group">
-            <label for="binary-input-minuend">Minuend:</label>
-            <input class='form-control' type="text"  pattern="[01]"  id="binary-input-minuend" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
+            <label for="binary-input-minuend" class="form-label">Minuend:</label>
+            <input class="form-control" type="text" pattern="[01]" id="binary-input-minuend" placeholder="Enter binary number (e.g., 0000.0000)">
         </div>
         <div class="form-group">
-            <label for="binary-input-subtrahend">Subtrahend:</label>
-            <input class='form-control' type="text"  pattern="[01]"  id="binary-input-subtrahend" class="binary-input" placeholder="Enter binary number (e.g., 0000.0000)" /><br>
+            <label for="binary-input-subtrahend" class="form-label">Subtrahend:</label>
+            <input class="form-control" type="text" pattern="[01]" id="binary-input-subtrahend" placeholder="Enter binary number (e.g., 0000.0000)">
+        </div><br>
+        <div class="input-group">
+            <button id="perform-subtraction" class="btn btn-primary">Perform Subtraction</button>
         </div>
-        <div class="form-group">
-            <button id="perform-subtraction" class="menu-button btn btn-primary">Perform Subtraction</button>
-        </div>
-        <div class="result-container">
+    
+        <div class="result-container mt-4">
             <h3>Results:</h3>
-        <div class="result-row">
-                <label>Operation: </label>
-                <span id="subtraction-operation"></span>
-        </div>
-        <div class="result-row">
-                <label>Binary: </label>
-                <span id="binary-subtraction-result"></span>
-        </div>
-        <div class="result-row">
-                <label>Octal: </label>
-                <span id="octal-subtraction-result"></span>
-        </div>
-        <div class="result-row">
-                <label>Decimal: </label>
-                <span id="decimal-subtraction-result"></span>
-        </div>
-        <div class="result-row">
-                <label>Hexadecimal: </label>
-                <span id="hex-subtraction-result"></span>
+            <div class="container">
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Operation:</label>
+                        <input type="text" id="subtraction-operation" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Binary:</label>
+                        <div class="input-group">
+                            <input type="text" id="binary-subtraction-result" class="form-control" readonly>
+                            <span class="input-group-text">2</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Octal:</label>
+                        <div class="input-group">
+                            <input type="text" id="octal-subtraction-result" class="form-control" readonly>
+                            <span class="input-group-text">8</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Decimal:</label>
+                        <div class="input-group">
+                            <input type="text" id="decimal-subtraction-result" class="form-control" readonly>
+                            <span class="input-group-text">10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label">Hexadecimal:</label>
+                        <div class="input-group">
+                            <input type="text" id="hex-subtraction-result" class="form-control" readonly>
+                            <span class="input-group-text">16</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div><br>
-<button class="menu-button return-button exit-button" style="display:none;">Return to Operations</button>
-</div><br>
+
+{% include 'footer.html' %}
+</div>
     
-    {% include 'footer.html' %}
+    
   </div>
   
  
   <script src="/static/js/binary_operations.js"></script>
+
 {% endblock %}

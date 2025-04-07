@@ -1,13 +1,23 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Add loading animation to conversion buttons
+    const returnButton = document.querySelector('.exit-button');
+    const allButtons = document.querySelectorAll('.conversion-button');
+
+    returnButton.addEventListener('click', function () {
+        const existingInputContainer = document.querySelector('.conversion-input-container');
+            if (existingInputContainer) {
+                existingInputContainer.remove();
+            }
+            else{
+                window.location.href = '/';
+            }
+            
+        allButtons.forEach(btn => btn.style.display = 'block');
+    });
     const conversionButtons = document.querySelectorAll('.conversion-button');
     conversionButtons.forEach(button => {
         button.addEventListener('click', function (e) {
             const conversion = this.dataset.conversion;
-            this.style.opacity = '0.7';
-            this.textContent = 'Loading...';
 
-            // Hide all conversion buttons
             const allButtons = document.querySelectorAll('.conversion-button');
             allButtons.forEach(btn => btn.style.display = 'none');
 
@@ -79,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const performConversionButton = document.getElementById('perform-conversion');
             performConversionButton.addEventListener('click', function () {
                 const inputNumber = document.getElementById('input-number').value.trim();
-
+                const nibbleIputNumber = convertToNibbleFormatInput(inputNumber);
                 let decimalValue;
                 switch (conversion) {
                     case 'binary':
@@ -87,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             alert('Invalid binary input. Only 0s and 1s allowed.');
                             return;
                         }
-                        decimalValue = binaryToDecimal16Bit(inputNumber);
+                        decimalValue = binaryToDecimal16Bit(nibbleIputNumber);
                         break;
                     case 'decimal':
                         decimalValue = parseFloat(inputNumber);
@@ -281,6 +291,32 @@ document.addEventListener('DOMContentLoaded', function () {
         decimalComplementResult.value = result.decimal;
         hexComplementResult.value = result.hex;
     });
+    function convertToNibbleFormatInput(binaryStr) {
+        // Remove any existing decimal point
+        const [intPart, fracPart] = binaryStr.split('.');
+
+        // Ensure integer part is padded from the left
+        const paddedIntPart = intPart.padStart(Math.ceil(intPart.length / 4) * 4, '0');
+
+        // Split integer part into proper 4-bit nibbles
+        const intNibbles = [];
+        for (let i = 0; i < paddedIntPart.length; i += 4) {
+            intNibbles.push(paddedIntPart.slice(i, i + 4));
+        }
+
+        // Split fractional part into nibbles
+        const fracNibbles = [];
+        if (fracPart) {
+            for (let i = 0; i < fracPart.length; i += 4) {
+                fracNibbles.push(fracPart.slice(i, i + 4).padEnd(4, '0'));
+            }
+        }
+
+        const formattedInt = intNibbles.join('');
+        const formattedFrac = fracNibbles.length > 0 ? '.' + fracNibbles.join('') : '';
+
+        return formattedInt + formattedFrac;
+    }
 
     // Add event listeners to validate input
     document.addEventListener('DOMContentLoaded', function () {
